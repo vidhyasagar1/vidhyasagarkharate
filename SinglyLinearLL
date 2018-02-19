@@ -1,0 +1,284 @@
+//Singly Linked List
+#include<stdio.h>
+#include<malloc.h>
+#define true 1
+#define false 0
+
+struct node
+{
+
+    int data;
+    struct node * next;
+
+};
+
+int InsertFirst(struct node**,int);
+int InsertLast(struct node**,int);
+int DeleteFirst(struct node**);
+int DeleteLast(struct node** );
+int InsertAtPosition(struct node**,int,int);
+int DeleteAtPosition(struct node**,int);
+void Display(struct node*);
+int Count(struct node* );
+
+
+int main()
+{
+    int bRet=0,iNo=0,iRet=0;
+   
+    struct node* head=NULL;
+    printf("INSERT FIRST\n\n");
+    bRet=InsertFirst(&head,13);
+    bRet=InsertFirst(&head,11);
+    bRet=InsertFirst(&head,51);
+    bRet=InsertFirst(&head,61);
+    bRet=InsertFirst(&head,41);
+    Display(head);   
+    iRet=Count(head);
+    printf("the nodes in the linked list are:%d\n",iRet);
+
+    printf("\n\n");
+    printf("INSERT LAST\n\n");
+    bRet=InsertLast(&head,30);
+    bRet=InsertLast(&head,31);
+    bRet=InsertLast(&head,55);
+    Display(head);
+    iRet=Count(head);
+    printf("the count of total nodes in the linked list are:%d\n",iRet);
+   
+    printf("\n\n");
+    printf("DELETE FIRST\n\n");
+    bRet=DeleteFirst(&head);
+    Display(head);
+    iRet=Count(head);
+    printf("the count of total nodes in the linked list are:%d\n",iRet);
+   
+    printf("\n\n");
+    printf("DELETE LAST\n\n");
+   
+    bRet=DeleteLast(&head);
+    Display(head);
+    iRet=Count(head);
+    printf("the count of total nodes in the linked list are:%d\n",iRet);
+    printf("\n\nINSERT AT POSITION\n\n");
+   
+    bRet=InsertAtPosition(&head,12,0);
+    bRet=InsertAtPosition(&head,15,7);
+    bRet=InsertAtPosition(&head,15,10);   
+    Display(head);
+    iRet=Count(head);
+    printf("the count of total nodes in the linked list are:%d\n",iRet);
+   
+    printf("\n\nDELETE AT POSITION\n\n");
+    bRet=DeleteAtPosition(&head,3);
+    bRet=DeleteAtPosition(&head,5);
+    Display(head);
+    iRet=Count(head);
+    printf("the count of total nodes in the linked list are:%d\n",iRet);
+   
+    return 0;
+
+   
+}
+
+int InsertFirst(struct node** first,int no)
+{
+    struct node * newn=NULL;
+    newn=(struct node*)malloc(sizeof(struct node));
+   
+    if(newn==NULL)
+    {
+        return false;
+    }
+    newn->next=NULL;
+    newn->data=no;   
+   
+    if(*first==NULL)
+    {
+        *first=newn;
+    }
+    else
+    {
+        newn->next=*first;
+        *first=newn;
+    }
+    return true;
+   
+}
+
+void Display(struct node* temp)
+{
+    while(temp!=NULL)
+    {
+        printf("the element in the list is:%d\n",temp->data);
+        temp=temp->next;
+    }
+    return;
+}
+
+int Count(struct node* first)
+{
+    int icnt=0;
+    while(first!=NULL)
+    {
+        icnt++;
+        first=first->next;
+    }
+   
+    return icnt;
+}
+
+int InsertLast(struct node** first,int no)
+{
+    struct node* temp=NULL;
+    struct node* newn=NULL;
+    newn=(struct node*)malloc(sizeof(struct node));
+       
+    if(newn!=NULL)   
+    {
+        newn->next=NULL;
+        newn->data=no;       
+    }
+    else{return false;}       
+           
+           
+    if(*first==NULL)
+    {
+        *first=newn;
+    }
+    else
+    {
+        temp=*first;
+        while(temp->next!=NULL)       
+        {
+            temp=temp->next;
+                   
+        }
+        temp->next=newn;
+    }
+    return true;
+}
+
+int DeleteFirst(struct node** first)
+{
+    struct node* temp=*first;
+    if((*first)==NULL)                        //if linked list empty
+    {
+        return false;
+    }
+       
+    *first=temp->next;
+    free(temp);
+
+    return true;       
+}
+
+int DeleteLast(struct node** first)
+{
+    struct node* temp=*first;
+    if(*first==NULL)
+    {
+        return false;
+    }   
+    else if((*first)->next==NULL)
+    {
+        free(*first);
+        *first=NULL;
+    }
+    else
+    {   
+    while(temp->next->next!=NULL)   
+    {
+        temp=temp->next;
+    }
+     free(temp->next);
+    temp->next=NULL;
+    }
+    return true;
+}
+
+int InsertAtPosition(struct node** first,int No,int Pos)
+{
+    struct node* newn=NULL;
+    newn=(struct node*)malloc(sizeof(struct node));                //
+   
+        newn->next=NULL;
+        newn->data=No;   
+   
+    struct node* temp=NULL;
+    int i=0;
+    int iCnt=(Count(*first));
+   
+    if((Pos<=0)||(Pos>(iCnt+1)))
+    {
+        printf("invaild positon:%d\n\n",Pos);
+        return false;
+    }
+   
+    if(Pos==1)
+    {
+        return(InsertFirst(first,No));
+    }   
+   
+    else if(Pos=iCnt+1)
+    {
+        return(InsertLast(first,No));
+    }
+    else
+    {
+       
+        if(newn==NULL)
+        {
+            return false;
+        }
+       
+        temp=*first;
+        for(i=0;i<Pos-2;i++)
+        {
+            temp=temp->next;
+        }
+        newn->next=temp->next;
+        temp->next=newn;
+    }   
+    return true;
+}
+
+int DeleteAtPosition(struct node** first,int Pos)
+{
+    struct node* temp1=NULL;
+    struct node* temp2=NULL;
+       
+    int i=0;   
+    int iCnt=Count(*first);
+   
+
+    if((Pos<1)||(Pos>iCnt))
+    {
+        printf("invaild positon:%d\n\n",Pos);
+        return false;
+    }
+    if(Pos==1)
+    {
+        return(DeleteFirst(first));
+    }   
+   
+    else if(Pos==iCnt)
+    {
+        return(DeleteLast(first));
+    }
+    else   
+    {
+        temp1=*first;
+       
+        for(i=0;i<(Pos-2);i++)
+        {
+            temp1=temp1->next;
+        }
+        temp2=temp1->next;
+        temp1->next=temp2->next;
+        printf("element at Position :%d Deleted\n\n",Pos);
+        free(temp2);
+       
+    }
+    return true;
+}
